@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>💕 Para Ti 💕</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Quicksand:wght@300;400;600&display=swap');
+
+        /* ============ RESET & BASE ============ */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background: linear-gradient(180deg, #fff0f5 0%, #ffe4ec 20%, #ffd6e0 40%, #ffc8d6 60%, #ffd6e0 80%, #fff0f5 100%);
+            background-attachment: fixed;
+            color: #5c2434;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* ============ CORAZONES FLOTANTES (fondo) ============ */
+        .floating-hearts {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .floating-hearts span {
+            position: absolute;
+            display: block;
+            font-size: 1.5rem;
+            animation: floatUp linear infinite;
+            opacity: 0;
+        }
+
+        @keyframes floatUp {
+            0%   { transform: translateY(100vh) rotate(0deg) scale(0.5); opacity: 0; }
+            10%  { opacity: 0.7; }
+            90%  { opacity: 0.7; }
+            100% { transform: translateY(-10vh) rotate(720deg) scale(1.2); opacity: 0; }
+        }
+
+        /* ============ BOTÓN DE MÚSICA ============ */
+        .music-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+            background: linear-gradient(135deg, #ff6b9d, #e84393);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(232, 67, 147, 0.4);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .music-btn:hover {
+            transform: scale(1.15);
+            box-shadow: 0 6px 30px rgba(232, 67, 147, 0.6);
+        }
+
+        .music-btn.playing {
+            animation: pulse-glow 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 4px 20px rgba(232, 67, 147, 0.4); }
+            50%      { box-shadow: 0 4px 40px rgba(232, 67, 147, 0.8); }
+        }
+
+        /* ============ HERO / ENTRADA ============ */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+            padding: 2rem;
+        }
+
+        .hero-img {
+            width: 160px;
+            animation: heartbeat 1.4s ease-in-out infinite;
+            filter: drop-shadow(0 8px 25px rgba(255, 100, 150, 0.5));
+            margin-bottom: 2rem;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            14%      { transform: scale(1.15); }
+            28%      { transform: scale(1); }
+            42%      { transform: scale(1.10); }
+            56%      { transform: scale(1); }
+        }
+
+        .hero h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 4rem;
+            color: #d63384;
+            text-shadow: 2px 2px 10px rgba(214, 51, 132, 0.3);
+            margin-bottom: 1rem;
+            animation: fadeInDown 1.5s ease;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            color: #8b3a62;
+            max-width: 600px;
+            line-height: 1.8;
+            animation: fadeInUp 2s ease;
+        }
+
+        .scroll-hint {
+            margin-top: 3rem;
+            animation: bounce 2s ease infinite;
+            font-size: 2rem;
+            color: #e84393;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40%  { transform: translateY(-15px); }
+            60%  { transform: translateY(-8px); }
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-40px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ============ SECCIONES ============ */
+        section {
+            position: relative;
+            z-index: 1;
+            max-width: 850px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        .section-card {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(12px);
+            border-radius: 24px;
+            padding: 3rem;
+            box-shadow: 0 10px 40px rgba(214, 51, 132, 0.12);
+            border: 1px solid rgba(255, 182, 206, 0.4);
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: revealCard 0.8s ease forwards;
+        }
+
+        .section-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 50px rgba(214, 51, 132, 0.2);
+        }
+
+        @keyframes revealCard {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-card h2 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.5rem;
+            color: #d63384;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .section-card .editable-text {
+            font-size: 1.15rem;
+            line-height: 2;
+            color: #6b2547;
+            text-align: center;
+            white-space: pre-wrap;
+        }
+
+        /* ============ SEPARADORES CON IMÁGENES ============ */
+        .separator {
+            text-align: center;
+            padding: 2rem 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .separator img {
+            width: 80px;
+            opacity: 0.8;
+            filter: drop-shadow(0 4px 12px rgba(255, 100, 150, 0.4));
+            animation: floatSmall 3s ease-in-out infinite;
+        }
+
+        @keyframes floatSmall {
+            0%, 100% { transform: translateY(0); }
+            50%      { transform: translateY(-12px); }
+        }
+
+        /* ============ SECCIÓN GATITOS ============ */
+        .gatitos-section {
+            text-align: center;
+        }
+
+        .gatitos-img {
+            width: min(500px, 90%);
+            border-radius: 20px;
+            margin: 2rem auto;
+            display: block;
+            filter: drop-shadow(0 8px 30px rgba(255, 100, 150, 0.3));
+            transition: transform 0.4s ease;
+        }
+
+        .gatitos-img:hover {
+            transform: scale(1.03) rotate(-1deg);
+        }
+
+        /* ============ SECCIÓN GRAFFITI CORAZÓN ============ */
+        .graffiti-wrap {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .graffiti-img {
+            width: 120px;
+            filter: drop-shadow(0 4px 15px rgba(0,0,0,0.15));
+            animation: tilt 4s ease-in-out infinite;
+        }
+
+        @keyframes tilt {
+            0%, 100% { transform: rotate(-5deg); }
+            50%      { transform: rotate(5deg); }
+        }
+
+        /* ============ SECCIÓN FINAL ============ */
+        .final-section {
+            min-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+            padding: 4rem 2rem;
+        }
+
+        .final-section .big-heart {
+            width: 200px;
+            animation: heartbeat 1.4s ease-in-out infinite;
+            filter: drop-shadow(0 10px 35px rgba(255, 100, 150, 0.5));
+            margin-bottom: 2rem;
+        }
+
+        .final-section h2 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 3.5rem;
+            color: #d63384;
+            text-shadow: 2px 2px 10px rgba(214, 51, 132, 0.3);
+            margin-bottom: 1.5rem;
+        }
+
+        .final-section .editable-text {
+            font-size: 1.3rem;
+            line-height: 2;
+            color: #6b2547;
+            max-width: 600px;
+        }
+
+        /* ============ DECORACIONES LATERALES ============ */
+        .deco-left, .deco-right {
+            position: fixed;
+            z-index: 0;
+            opacity: 0.08;
+            pointer-events: none;
+        }
+
+        .deco-left {
+            top: 30%;
+            left: -30px;
+            width: 200px;
+            transform: rotate(-15deg);
+        }
+
+        .deco-right {
+            top: 60%;
+            right: -30px;
+            width: 180px;
+            transform: rotate(20deg);
+        }
+
+        /* ============ PÉTALOS CAYENDO ============ */
+        .petals {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .petal {
+            position: absolute;
+            top: -20px;
+            width: 14px;
+            height: 14px;
+            background: radial-gradient(circle, #ffb6c1, #ff69b4);
+            border-radius: 50% 0 50% 50%;
+            opacity: 0;
+            animation: petalFall linear infinite;
+        }
+
+        @keyframes petalFall {
+            0%   { transform: translateY(-20px) rotate(0deg); opacity: 0; }
+            10%  { opacity: 0.6; }
+            90%  { opacity: 0.6; }
+            100% { transform: translateY(105vh) rotate(360deg); opacity: 0; }
+        }
+
+        /* ============ FOOTER ============ */
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: #c77d9f;
+            font-size: 0.9rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ============ RESPONSIVE ============ */
+        @media (max-width: 600px) {
+            .hero h1 { font-size: 2.5rem; }
+            .hero-img { width: 110px; }
+            .section-card { padding: 2rem 1.5rem; }
+            .section-card h2 { font-size: 2rem; }
+            .final-section h2 { font-size: 2.5rem; }
+            .graffiti-img { width: 80px; }
+            .deco-left, .deco-right { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- AUDIO DE FONDO -->
+    <audio id="bgMusic" loop preload="auto">
+        <source src="../recursos/musica.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- BOTÓN DE MÚSICA -->
+    <button class="music-btn" id="musicBtn" title="Reproducir / Pausar música" onclick="toggleMusic()">
+        🎵
+    </button>
+
+    <!-- DECORACIONES DE FONDO -->
+    <img src="../recursos/corazones.png" alt="" class="deco-left" aria-hidden="true">
+    <img src="../recursos/corazones.png" alt="" class="deco-right" aria-hidden="true">
+
+    <!-- CORAZONES FLOTANTES -->
+    <div class="floating-hearts" id="floatingHearts"></div>
+
+    <!-- PÉTALOS CAYENDO -->
+    <div class="petals" id="petals"></div>
+
+    <!-- ==================== HERO ==================== -->
+    <div class="hero">
+        <img src="../recursos/corazon.png" alt="Corazón" class="hero-img">
+        <h1>Para alguien muy especial...</h1>
+        <p>Hay algo que llevo guardando en mi corazón desde hace tiempo y hoy he reunido el valor para decírtelo.</p>
+        <div class="scroll-hint">↓</div>
+    </div>
+
+    <!-- ==================== SECCIÓN 1: Lo que siento ==================== -->
+    <div class="separator">
+        <img src="../recursos/corazones.png" alt="Corazones">
+    </div>
+
+    <section>
+        <div class="section-card" style="animation-delay: 0.2s;">
+            <h2>✨ Lo que siento por ti ✨</h2>
+            <div class="editable-text">
+                <!-- 🖊️ ESCRIBE AQUÍ TUS PALABRAS -->
+                Escribe aquí lo que sientes...
+                Cada palabra que pongas será especial.
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== SECCIÓN 2: Razones ==================== -->
+    <div class="separator">
+        <img src="../recursos/forma-de-corazon-de-graffiti.png" alt="Corazón graffiti" style="width: 60px;">
+    </div>
+
+    <section>
+        <div class="section-card" style="animation-delay: 0.4s;">
+            <h2>💖 Razones por las que me gustas 💖</h2>
+            <div class="graffiti-wrap">
+                <img src="../recursos/forma-de-corazon-de-graffiti.png" alt="Corazón" class="graffiti-img">
+                <div class="editable-text" style="flex: 1; min-width: 250px;">
+                    <!-- 🖊️ ESCRIBE AQUÍ TUS RAZONES -->
+                    Razón 1: ...
+                    Razón 2: ...
+                    Razón 3: ...
+                    Razón 4: ...
+                    Razón 5: ...
+                </div>
+                <img src="../recursos/forma-de-corazon-de-graffiti.png" alt="Corazón" class="graffiti-img" style="animation-delay: 0.5s;">
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== SECCIÓN 3: Momentos ==================== -->
+    <div class="separator">
+        <img src="../recursos/corazones.png" alt="Corazones">
+    </div>
+
+    <section>
+        <div class="section-card" style="animation-delay: 0.6s;">
+            <h2>🌸 Nuestros momentos 🌸</h2>
+            <div class="editable-text">
+                <!-- 🖊️ ESCRIBE AQUÍ SOBRE SUS MOMENTOS -->
+                Escribe sobre esos momentos especiales
+                que han significado mucho para ti...
+                Cada recuerdo cuenta una historia.
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== SECCIÓN GATITOS ==================== -->
+    <div class="separator">
+        <img src="../recursos/corazon.png" alt="Corazón" style="width: 50px;">
+    </div>
+
+    <section>
+        <div class="section-card gatitos-section" style="animation-delay: 0.8s;">
+            <h2>🐱 Como estos gatitos... 🐱</h2>
+            <img src="../recursos/Pegatinas de gatitos con flores 天天彩票app.png" alt="Gatitos con flores" class="gatitos-img">
+            <div class="editable-text" style="margin-top: 1rem;">
+                <!-- 🖊️ ESCRIBE AQUÍ UN MENSAJE TIERNO -->
+                ...así quiero darte flores todos los días 🌸
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== SECCIÓN 4: Lo que quiero ==================== -->
+    <div class="separator">
+        <img src="../recursos/corazones.png" alt="Corazones">
+    </div>
+
+    <section>
+        <div class="section-card" style="animation-delay: 1s;">
+            <h2>💕 Lo que quiero decirte 💕</h2>
+            <div class="editable-text">
+                <!-- 🖊️ ESCRIBE AQUÍ TU MENSAJE PRINCIPAL -->
+                Aquí va lo más importante...
+                Lo que siempre has querido decir.
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== SECCIÓN FINAL ==================== -->
+    <div class="final-section">
+        <img src="../recursos/corazones.png" alt="Corazones" class="big-heart">
+        <h2>¿Quieres ser mi persona especial?</h2>
+        <div class="editable-text">
+            <!-- 🖊️ ESCRIBE AQUÍ TU PREGUNTA FINAL O DECLARACIÓN -->
+            Escribe aquí tu declaración final...
+            Las palabras que sellarán este momento. 💕
+        </div>
+    </div>
+
+    <!-- ==================== FOOTER ==================== -->
+    <footer>
+        Hecho con todo mi 💖
+    </footer>
+
+    <!-- ==================== JAVASCRIPT ==================== -->
+    <script>
+        // ---- Música ----
+        const music = document.getElementById('bgMusic');
+        const musicBtn = document.getElementById('musicBtn');
+        let isPlaying = false;
+
+        function toggleMusic() {
+            if (isPlaying) {
+                music.pause();
+                musicBtn.textContent = '🎵';
+                musicBtn.classList.remove('playing');
+            } else {
+                music.play();
+                musicBtn.textContent = '🔊';
+                musicBtn.classList.add('playing');
+            }
+            isPlaying = !isPlaying;
+        }
+
+        // Auto-reproducir al primer click/toque en la página
+        let firstInteraction = true;
+        document.addEventListener('click', function() {
+            if (firstInteraction) {
+                music.play().then(() => {
+                    isPlaying = true;
+                    musicBtn.textContent = '🔊';
+                    musicBtn.classList.add('playing');
+                }).catch(() => {});
+                firstInteraction = false;
+            }
+        }, { once: true });
+
+        // ---- Corazones flotantes ----
+        const heartsContainer = document.getElementById('floatingHearts');
+        const heartEmojis = ['💕', '💖', '💗', '💓', '💘', '💝', '♥️', '🩷'];
+
+        function createHeart() {
+            const heart = document.createElement('span');
+            heart.textContent = heartEmojis[Math.floor(Math.random() * heartEmojis.length)];
+            heart.style.left = Math.random() * 100 + '%';
+            heart.style.fontSize = (Math.random() * 1.5 + 0.8) + 'rem';
+            heart.style.animationDuration = (Math.random() * 8 + 8) + 's';
+            heart.style.animationDelay = Math.random() * 5 + 's';
+            heartsContainer.appendChild(heart);
+
+            setTimeout(() => heart.remove(), 18000);
+        }
+
+        setInterval(createHeart, 800);
+
+        // ---- Pétalos ----
+        const petalsContainer = document.getElementById('petals');
+
+        function createPetal() {
+            const petal = document.createElement('div');
+            petal.className = 'petal';
+            petal.style.left = Math.random() * 100 + '%';
+            petal.style.width = (Math.random() * 10 + 8) + 'px';
+            petal.style.height = petal.style.width;
+            petal.style.animationDuration = (Math.random() * 6 + 6) + 's';
+            petal.style.animationDelay = Math.random() * 4 + 's';
+            petalsContainer.appendChild(petal);
+
+            setTimeout(() => petal.remove(), 16000);
+        }
+
+        setInterval(createPetal, 600);
+
+        // ---- Animación al hacer scroll (revelar tarjetas) ----
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animationPlayState = 'running';
+                }
+            });
+        }, { threshold: 0.15 });
+
+        document.querySelectorAll('.section-card').forEach(card => {
+            card.style.animationPlayState = 'paused';
+            observer.observe(card);
+        });
+    </script>
+
+</body>
+</html>
